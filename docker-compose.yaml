@@ -17,3 +17,19 @@ services:
     environment:
       - PGADMIN_DEFAULT_EMAIL=<EMAIL>
       - PGADMIN_DEFAULT_PASSWORD=<CHANGE-ME>
+      
+  app:
+    image: prawee/strapi
+    container_name: 69-s2-app
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "9092:1337"
+    environment:
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: <USER>
+      DATABASE_USERNAME: <USER>
+      DATABASE_PASSWORD: <CHANGE-ME>

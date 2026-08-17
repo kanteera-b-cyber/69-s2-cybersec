@@ -1,7 +1,7 @@
 # REST
 
 ## login
-POST http://localhost:9092/admin/auth/login
+POST http://localhost:1337/admin/auth/login
 Content-Type: application/json
 
 {
@@ -9,7 +9,30 @@ Content-Type: application/json
     "password": "",
     "rememberMe": false
 }
+###
 
 ## Register
+POST http://localhost:1337/admin/register-admin
+Content-Type: application/json
+
+{
+    "firstname": "",
+    "lastname": "",
+    "email": "",
+    "password": ""
+}
+###
+
 ## Forget Password
+POST http://localhost:1337/admin/forgot-password
+Content-Type: application/json
+
+{
+    "email": ""
+}
+###
+
 ## Profile
+GET http://localhost:1337/admin/users/me
+authorization: Bearer <REVOKED-JWT>
+Content-Type: application/json

@@ -13,7 +13,7 @@ services:
     image: dpage/pgadmin4:8.8
     container_name: 69-s2-admin
     ports:
-      - "8082:80"
+      - ${PGADMIN_DEFAULT_POR:-8082}
     environment:
       - PGADMIN_DEFAULT_EMAIL=<EMAIL>
       - PGADMIN_DEFAULT_PASSWORD=<CHANGE-ME>

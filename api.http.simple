@@ -34,5 +34,5 @@ Content-Type: application/json
 
 ## Profile
 GET http://localhost:1337/admin/users/me
-authorization: Bearer <REVOKED-JWT>
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
 Content-Type: application/json

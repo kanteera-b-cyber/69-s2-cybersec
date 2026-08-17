@@ -3,17 +3,16 @@ services:
     image: postgres:16-alpine
     container_name: 69-s2-db
     ports:
-      - "54321:5432"
+      - ${POSTGRES_PORT:-54321}:5432
     environment:
       - POSTGRES_PASSWORD=<CHANGE-ME>
       - POSTGRES_USER=<USER>
       - POSTGRES_DB=<USER>
-
   admin:
     image: dpage/pgadmin4:8.8
     container_name: 69-s2-admin
     ports:
-      - ${PGADMIN_DEFAULT_POR:-8082}
+      - ${PGADMIN_DEFAULT_PORT:-8082}:80
     environment:
       - PGADMIN_DEFAULT_EMAIL=<EMAIL>
       - PGADMIN_DEFAULT_PASSWORD=<CHANGE-ME>
@@ -25,7 +24,7 @@ services:
     depends_on:
       - db
     ports:
-      - "9092:1337"
+      - ${APP_PORT:-9092}:1337
     environment:
       DATABASE_CLIENT: postgres
       DATABASE_HOST: db

@@ -8,6 +8,8 @@ services:
       - POSTGRES_PASSWORD=<CHANGE-ME>
       - POSTGRES_USER=<USER>
       - POSTGRES_DB=<USER>
+    volumes:
+      - data-postgres:/var/lib/postgresql/data
 
   admin:
     image: dpage/pgadmin4:8.8
@@ -17,6 +19,10 @@ services:
     environment:
       - PGADMIN_DEFAULT_EMAIL=<EMAIL>
       - PGADMIN_DEFAULT_PASSWORD=<CHANGE-ME>
+    volumes:
+      - data-pgadmin:/var/lib/pgadmin
+    depends_on:
+      - db
       
   app:
     image: prawee/strapi
@@ -33,3 +39,7 @@ services:
       DATABASE_NAME: <USER>
       DATABASE_USERNAME: <USER>
       DATABASE_PASSWORD: <CHANGE-ME>
+
+volumes:
+  data-postgres:
+  data-pgadmin:

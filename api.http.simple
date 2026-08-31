@@ -66,16 +66,6 @@ Content-Type: application/json
     "email": ""
 }
 
-### 2.3.1 Reset Password
-POST http://localhost:1337/api/auth/reset-password
-Content-Type: application/json
-
-{
-    "code": "your-reset-code",
-    "password": "NewPassword",
-    "passwordConfirmation": "NewPassword"
-}
-
 ### 2.4 Profile
 GET http://localhost:1337/api/users/me
 Authorization: Bearer YOUR_JWT_TOKEN_HERE

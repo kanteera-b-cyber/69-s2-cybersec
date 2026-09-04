@@ -33,7 +33,18 @@ Content-Type: application/json
 }
 
 
-### 1.4 Profile
+### 1.4 Reset Password
+POST http://localhost:1337/admin/reset-password
+Content-Type: application/json
+
+{
+    "password": "",
+    "passwordConfirmation": "",
+    "code": "RESET_PASSWORD_CODE_FROM_EMAIL"
+}
+
+
+### 1.5 Profile
 GET http://localhost:1337/admin/users/me
 Authorization: Bearer YOUR_JWT_TOKEN_HERE
 Content-Type: application/json
@@ -66,7 +77,18 @@ Content-Type: application/json
     "email": ""
 }
 
-### 2.4 Profile
+
+### 2.4 Reset Password
+POST http://localhost:1337/api/auth/reset-password
+Content-Type: application/json
+
+{
+    "password": "",
+    "passwordConfirmation": "",
+    "code": "RESET_PASSWORD_CODE_FROM_EMAIL"
+}
+
+### 2.5 Profile
 GET http://localhost:1337/api/users/me
 Authorization: Bearer YOUR_JWT_TOKEN_HERE
 Content-Type: application/json

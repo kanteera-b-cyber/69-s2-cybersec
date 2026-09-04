@@ -25,7 +25,7 @@ services:
       - db
       
   app:
-    image: prawee/strapi
+    build: .
     container_name: 69-s2-app
     restart: always
     depends_on:

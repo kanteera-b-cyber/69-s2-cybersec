@@ -34,13 +34,13 @@ Content-Type: application/json
 
 
 ### 1.4 Reset Password
-# ใช้แบบเดียวกับระบบ User: ใส่ resetPasswordToken หรือ code + password ใหม่
 POST http://localhost:1337/admin/reset-password
 Content-Type: application/json
 
 {
     "resetPasswordToken": "RESET_PASSWORD_CODE_FROM_API_RESPONSE",
     "password": ""
+    "passwordConfirmation": ""
 }
 
 
@@ -48,6 +48,7 @@ Content-Type: application/json
 GET http://localhost:1337/admin/users/me
 Authorization: Bearer YOUR_JWT_TOKEN_HERE
 Content-Type: application/json
+
 
 ## 2.User
 ### 2.1 Login (User)
@@ -79,13 +80,13 @@ Content-Type: application/json
 
 
 ### 2.4 Reset Password
-# ใช้แบบเดียวกับ Admin: ใส่ resetPasswordToken (code จาก Forgot Password) + password ใหม่
 POST http://localhost:1337/api/auth/reset-password
 Content-Type: application/json
 
 {
-    "resetPasswordToken": "RESET_PASSWORD_CODE_FROM_API_RESPONSE",
-    "password": ""
+    "password": "",
+    "passwordConfirmation": "",
+    "code": ""RESET_PASSWORD_CODE_FROM_API_RESPONSE"
 }
 
 ### 2.5 Profile

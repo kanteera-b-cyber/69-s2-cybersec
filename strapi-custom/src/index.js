@@ -1,7 +1,69 @@
 'use strict';
 
+const { ApplicationError, ValidationError } = require('@strapi/utils').errors;
+
 module.exports = {
-  register(/*{ strapi }*/) {},
+  register({ strapi }) {
+    const adminAuthController = strapi.admin.controllers.authentication;
+
+    adminAuthController.forgotPassword = async (ctx) => {
+      const { email } = ctx.request.body || {};
+
+      if (!email || typeof email !== 'string') {
+        throw new ApplicationError('Email is required');
+      }
+
+      const user = await strapi.query('admin::user').findOne({ where: { email, isActive: true } });
+
+      if (!user) {
+        return ctx.send({ ok: true });
+      }
+
+      const resetPasswordToken = strapi.admin.services.token.createToken();
+      await strapi.admin.services.user.updateById(user.id, { resetPasswordToken });
+
+      strapi.log.warn(
+        `[forgot-password] Reset password code for admin ${user.email}: ${resetPasswordToken}`
+      );
+
+      ctx.send({
+        ok: true,
+        code: resetPasswordToken,
+        email: user.email,
+      });
+    };
+
+    adminAuthController.resetPassword = async (ctx) => {
+      const { password, resetPasswordToken, code } = ctx.request.body || {};
+      const token = resetPasswordToken || code;
+
+      if (!token || typeof token !== 'string') {
+        throw new ValidationError('The provided token is invalid');
+      }
+
+      if (!password || typeof password !== 'string' || password.length < 6) {
+        throw new ValidationError('Please provide a new password with at least 6 characters');
+      }
+
+      const user = await strapi
+        .query('admin::user')
+        .findOne({ where: { resetPasswordToken: token, isActive: true } });
+
+      if (!user) {
+        throw new ValidationError('Incorrect code provided');
+      }
+
+      const updatedUser = await strapi.admin.services.user.updateById(user.id, {
+        password,
+        resetPasswordToken: null,
+      });
+
+      ctx.send({
+        jwt: strapi.admin.services.token.createJwtToken(updatedUser),
+        user: strapi.admin.services.user.sanitizeUser(updatedUser),
+      });
+    };
+  },
 
   async bootstrap({ strapi }) {
     const knex = strapi.db.connection;

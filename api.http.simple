@@ -1,8 +1,18 @@
 # REST
 
 ##VARIABLES
-@ADMIN_EMAIL = $dotenv ADMIN_EMAIL
-@ADMIN_PASSWORD = $dotenv ADMIN_PASSWORD
+@ADMIN_EMAIL = {{$dotenv ADMIN_EMAIL}}
+@ADMIN_PASSWORD = {{$dotenv ADMIN_PASSWORD}}
+@ADMIN_FIRSTNAME = {{$dotenv ADMIN_FIRSTNAME}}
+@ADMIN_LASTNAME = {{$dotenv ADMIN_LASTNAME}}
+@ADMIN_RESET_TOKEN = {{$dotenv ADMIN_RESET_TOKEN}}
+@ADMIN_JWT = {{$dotenv ADMIN_JWT}}
+@USER_EMAIL = {{$dotenv USER_EMAIL}}
+@USER_PASSWORD = {{$dotenv USER_PASSWORD}}
+@USER_USERNAME = {{$dotenv USER_USERNAME}}
+@USER_RESET_CODE = {{$dotenv USER_RESET_CODE}}
+@USER_JWT = {{$dotenv USER_JWT}}
+
 
 ## 1.Admin
 ### 1.1 Login
@@ -10,8 +20,8 @@ POST http://localhost:1337/admin/login
 Content-Type: application/json
 
 {
-    "email": "{{$ADMIN_EMAIL}}",
-    "password": "{{$ADMIN_PASSWORD}}",
+    "email": "{{ADMIN_EMAIL}}",
+    "password": "{{ADMIN_PASSWORD}}",
     "rememberMe": false
 }
 
@@ -21,10 +31,10 @@ POST http://localhost:1337/admin/register-admin
 Content-Type: application/json
 
 {
-    "firstname": "",
-    "lastname": "",
-    "email": "",
-    "password": ""
+    "firstname": "{{ADMIN_FIRSTNAME}}",
+    "lastname": "{{ADMIN_LASTNAME}}",
+    "email": "{{ADMIN_EMAIL}}",
+    "password": "{{ADMIN_PASSWORD}}"
 }
 
 
@@ -33,25 +43,25 @@ POST http://localhost:1337/admin/forgot-password
 Content-Type: application/json
 
 {
-    "email": ""
+    "email": "{{ADMIN_EMAIL}}"
 }
 
 
-### 1.4 Reset Password
+### 1.3.1 Reset Password
 # เอา code จาก response ของ Forgot Password มาใส่ที่ resetPasswordToken (ดู log server ได้เช่นกัน)
 POST http://localhost:1337/admin/reset-password
 Content-Type: application/json
 
 {
-    "resetPasswordToken": "RESET_PASSWORD_CODE_FROM_API_RESPONSE",
-    "password": "",
-    "passwordConfirmation": ""
+    "resetPasswordToken": "{{ADMIN_RESET_TOKEN}}",
+    "password": "{{ADMIN_PASSWORD}}",
+    "passwordConfirmation": "{{ADMIN_PASSWORD}}"
 }
 
 
-### 1.5 Profile
+### 1.4 Profile
 GET http://localhost:1337/admin/users/me
-Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Authorization: Bearer {{ADMIN_JWT}}
 Content-Type: application/json
 
 
@@ -61,8 +71,8 @@ POST http://localhost:1337/api/auth/local
 Content-Type: application/json
 
 {
-    "identifier": "",
-    "password": ""
+    "identifier": "{{USER_EMAIL}}",
+    "password": "{{USER_PASSWORD}}"
 }
 
 ### 2.2 Register (User) one time for first time
@@ -70,9 +80,9 @@ POST http://localhost:1337/api/auth/local/register
 Content-Type: application/json
 
 {
-    "username": "",
-    "email": "",
-    "password": ""
+    "username": "{{USER_USERNAME}}",
+    "email": "{{USER_EMAIL}}",
+    "password": "{{USER_PASSWORD}}"
 }
 
 ### 2.3 Forgot Password
@@ -80,23 +90,23 @@ POST http://localhost:1337/api/auth/forgot-password
 Content-Type: application/json
 
 {
-    "email": ""
+    "email": "{{USER_EMAIL}}"
 }
 
 
-### 2.4 Reset Password
+### 2.3.1 Reset Password
 # เอา code จาก response ของ Forgot Password มาใส่ที่ code (ดู log server ได้เช่นกัน)
 POST http://localhost:1337/api/auth/reset-password
 Content-Type: application/json
 
 {
-    "password": "",
-    "passwordConfirmation": "",
-    "code": "RESET_PASSWORD_CODE_FROM_API_RESPONSE"
+    "password": "{{USER_PASSWORD}}",
+    "passwordConfirmation": "{{USER_PASSWORD}}",
+    "code": "{{USER_RESET_CODE}}"
 }
 
 
-### 2.5 Profile
+### 2.4 Profile
 GET http://localhost:1337/api/users/me
-Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Authorization: Bearer {{USER_JWT}}
 Content-Type: application/json

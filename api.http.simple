@@ -1,19 +1,23 @@
 # REST
 
+##VARIABLES
+@ADMIN_EMAIL = $dotenv ADMIN_EMAIL
+@ADMIN_PASSWORD = $dotenv ADMIN_PASSWORD
+
 ## 1.Admin
 ### 1.1 Login
 POST http://localhost:1337/admin/login
 Content-Type: application/json
 
 {
-    "email": "",
-    "password": "",
+    "email": "{{$ADMIN_EMAIL}}",
+    "password": "{{$ADMIN_PASSWORD}}",
     "rememberMe": false
 }
 
 
-### 1.2 Register
-POST http://localhost:1337/admin/auth/register
+### 1.2 Register (Admin) one time for first time
+POST http://localhost:1337/admin/register-admin
 Content-Type: application/json
 
 {
@@ -34,12 +38,13 @@ Content-Type: application/json
 
 
 ### 1.4 Reset Password
+# เอา code จาก response ของ Forgot Password มาใส่ที่ resetPasswordToken (ดู log server ได้เช่นกัน)
 POST http://localhost:1337/admin/reset-password
 Content-Type: application/json
 
 {
     "resetPasswordToken": "RESET_PASSWORD_CODE_FROM_API_RESPONSE",
-    "password": ""
+    "password": "",
     "passwordConfirmation": ""
 }
 
@@ -60,7 +65,7 @@ Content-Type: application/json
     "password": ""
 }
 
-### 2.2 register (User) one time for first time
+### 2.2 Register (User) one time for first time
 POST http://localhost:1337/api/auth/local/register
 Content-Type: application/json
 
@@ -80,14 +85,16 @@ Content-Type: application/json
 
 
 ### 2.4 Reset Password
+# เอา code จาก response ของ Forgot Password มาใส่ที่ code (ดู log server ได้เช่นกัน)
 POST http://localhost:1337/api/auth/reset-password
 Content-Type: application/json
 
 {
     "password": "",
     "passwordConfirmation": "",
-    "code": ""RESET_PASSWORD_CODE_FROM_API_RESPONSE"
+    "code": "RESET_PASSWORD_CODE_FROM_API_RESPONSE"
 }
+
 
 ### 2.5 Profile
 GET http://localhost:1337/api/users/me

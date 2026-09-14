@@ -7,6 +7,7 @@ const {
   verifyResetToken,
   cleanExpiredResetTokens,
 } = require('./utils/reset-token');
+const { recordPasswordChange } = require('./utils/password-audit');
 
 module.exports = {
   register({ strapi }) {
@@ -67,6 +68,8 @@ module.exports = {
         password,
       });
 
+      await recordPasswordChange(strapi, updatedUser.id, 'admin');
+
       ctx.send({
         jwt: strapi.admin.services.token.createJwtToken(updatedUser),
         user: strapi.admin.services.user.sanitizeUser(updatedUser),
@@ -120,6 +123,45 @@ module.exports = {
     const resetDeleted = await cleanExpiredResetTokens(strapi);
     if (resetDeleted > 0) {
       strapi.log.info(`Cleaned up ${resetDeleted} expired reset tokens`);
+    }
+
+    const hasPasswordChangeTable = await knex.schema.hasTable('user_password_changes');
+    if (!hasPasswordChangeTable) {
+      await knex.schema.createTable('user_password_changes', (table) => {
+        table.increments('id').primary();
+        table.bigInteger('user_id').notNullable();
+        table.string('user_type', 10).notNullable();
+        table.timestamp('changed_at').defaultTo(knex.fn.now());
+      });
+      strapi.log.info('Created user_password_changes table');
+    }
+
+    const hasRateLimitTable = await knex.schema.hasTable('rate_limit_attempts');
+    if (!hasRateLimitTable) {
+      await knex.schema.createTable('rate_limit_attempts', (table) => {
+        table.increments('id').primary();
+        table.string('rate_key', 255).notNullable();
+        table.timestamp('attempt_at').defaultTo(knex.fn.now());
+        table.index(['rate_key', 'attempt_at']);
+      });
+      strapi.log.info('Created rate_limit_attempts table');
+    }
+
+    const rateLimitDeleted = await knex('rate_limit_attempts')
+      .where('attempt_at', '<', new Date(Date.now() - 10 * 60 * 1000))
+      .del();
+    if (rateLimitDeleted > 0) {
+      strapi.log.info(`Cleaned up ${rateLimitDeleted} expired rate limit rows`);
+    }
+
+    const upStore = strapi.store({ type: 'plugin', name: 'users-permissions' });
+    const advanced = await upStore.get({ key: 'advanced' });
+    if (advanced && advanced.allow_register) {
+      await upStore.set({
+        key: 'advanced',
+        value: { ...advanced, allow_register: false },
+      });
+      strapi.log.info('Public user registration disabled (allow_register = false)');
     }
   },
 };

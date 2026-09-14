@@ -4,6 +4,7 @@ const { sanitize } = require('@strapi/utils');
 const { ApplicationError, ValidationError } = require('@strapi/utils').errors;
 const { assertStrongPassword } = require('../../utils/password');
 const { issueResetToken, verifyResetToken } = require('../../utils/reset-token');
+const { recordPasswordChange } = require('../../utils/password-audit');
 
 const sanitizeUser = (user, ctx) => {
   const userSchema = strapi.getModel('plugin::users-permissions.user');
@@ -70,6 +71,8 @@ module.exports = (plugin) => {
       .service('plugin::users-permissions.user')
       .edit(user.id, { password });
 
+    await recordPasswordChange(strapi, user.id, 'user');
+
     const jwt = strapi.plugin('users-permissions').service('jwt').issue({ id: user.id });
 
     ctx.send({
@@ -80,6 +83,13 @@ module.exports = (plugin) => {
 
   const defaultRegister = auth.register;
   auth.register = async (ctx) => {
+    const pluginStore = strapi.store({ type: 'plugin', name: 'users-permissions' });
+    const advanced = await pluginStore.get({ key: 'advanced' });
+
+    if (!advanced || !advanced.allow_register) {
+      return ctx.badRequest('Register action is currently disabled.');
+    }
+
     const { password } = ctx.request.body || {};
     assertStrongPassword(password);
     return defaultRegister(ctx);
@@ -90,7 +100,14 @@ module.exports = (plugin) => {
     auth.changePassword = async (ctx) => {
       const { password } = ctx.request.body || {};
       assertStrongPassword(password);
-      return defaultChangePassword(ctx);
+
+      const result = await defaultChangePassword(ctx);
+
+      if (ctx.state && ctx.state.user) {
+        await recordPasswordChange(strapi, ctx.state.user.id, 'user');
+      }
+
+      return result;
     };
   }
 

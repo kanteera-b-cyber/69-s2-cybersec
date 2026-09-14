@@ -13,4 +13,11 @@ module.exports = [
     name: 'global::jwt-blacklist',
     config: {},
   },
+  {
+    name: 'global::rate-limit',
+    config: {
+      windowMs: 60 * 1000,
+      max: 10,
+    },
+  },
 ];

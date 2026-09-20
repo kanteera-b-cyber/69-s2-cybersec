@@ -17,16 +17,16 @@ const recordPasswordChange = async (strapi, userId, userType) => {
   }
 };
 
-const isTokenIssuedBeforePasswordChange = async (strapi, userId, iatSeconds) => {
+const isTokenIssuedBeforePasswordChange = async (strapi, userId, userType, iatSeconds) => {
   const knex = strapi.db.connection;
 
   const hasTable = await knex.schema.hasTable('user_password_changes');
-  if (!hasTable || !userId || !iatSeconds) {
+  if (!hasTable || !userId || !userType || !iatSeconds) {
     return false;
   }
 
   const latestChange = await knex('user_password_changes')
-    .where({ user_id: userId })
+    .where({ user_id: userId, user_type: userType })
     .orderBy('changed_at', 'desc')
     .first();
 

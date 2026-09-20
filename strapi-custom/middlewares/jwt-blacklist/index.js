@@ -41,10 +41,13 @@ module.exports = (config, { strapi }) => {
       return next();
     }
 
+    const endpointUserType = ctx.path.startsWith('/admin') ? 'admin' : 'user';
+
     try {
       const revokedByPasswordChange = await isTokenIssuedBeforePasswordChange(
         strapi,
         decoded.id,
+        endpointUserType,
         decoded.iat
       );
       if (revokedByPasswordChange) {

@@ -110,3 +110,43 @@ Content-Type: application/json
 GET http://localhost:1337/api/users/me
 Authorization: Bearer {{USER_JWT}}
 Content-Type: application/json
+
+### 3.content
+###3.1.1 student
+GET http://localhost:1337/api/students
+Authorization: Bearer {{USER_JWT}}
+
+####3.1.2 student by id
+GET http://localhost:1337/api/students/{{id}}
+Authorization: Bearer {{USER_JWT}}
+
+###3.1.3 create student
+POST http://localhost:1337/api/students
+Authorization: Bearer {{USER_JWT}}
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "john.doe@example.com"
+}
+
+###3.1.4 update student
+PUT http://localhost:1337/api/students/{{id}}
+Authorization: Bearer {{USER_JWT}}
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "john.doe@example.com"
+}
+
+###3.1.5 delete student
+DELETE http://localhost:1337/api/students/{{id}}
+Authorization: Bearer {{USER_JWT}}
+
+##3.2 teacher
+GET http://localhost:1337/api/teachers
+Authorization: Bearer {{USER_JWT}}
+
+###3.2.1 teacher by id
+GET http://localhost:1337/api/teachers/{{id}}

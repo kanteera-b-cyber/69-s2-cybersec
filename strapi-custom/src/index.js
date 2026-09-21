@@ -31,10 +31,10 @@ module.exports = {
       strapi.log.info('[forgot-password] Reset password token has been set for the admin account');
 
       if (process.env.NODE_ENV !== 'production') {
-        ctx.send({ ok: true, code: resetPasswordToken });
-      } else {
-        ctx.send({ ok: true });
+        strapi.log.info('[forgot-password] (dev) reset code: ' + resetPasswordToken);
       }
+
+      ctx.send({ ok: true });
     };
 
     adminAuthController.resetPassword = async (ctx) => {

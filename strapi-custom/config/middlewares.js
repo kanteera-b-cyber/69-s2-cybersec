@@ -10,10 +10,6 @@ module.exports = [
   'strapi::favicon',
   'strapi::public',
   {
-    name: 'global::jwt-blacklist',
-    config: {},
-  },
-  {
     name: 'global::rate-limit',
     config: {
       windowMs: 60 * 1000,

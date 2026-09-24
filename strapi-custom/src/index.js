@@ -32,6 +32,10 @@ module.exports = {
 
       if (process.env.NODE_ENV !== 'production') {
         strapi.log.info('[forgot-password] (dev) reset code: ' + resetPasswordToken);
+      } else {
+        strapi.log.warn(
+          '[forgot-password] No email provider configured; reset code: ' + resetPasswordToken
+        );
       }
 
       ctx.send({ ok: true });

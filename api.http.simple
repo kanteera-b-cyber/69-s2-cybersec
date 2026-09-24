@@ -12,6 +12,17 @@
 @USER_USERNAME = {{$dotenv USER_USERNAME}}
 @USER_RESET_CODE = {{$dotenv USER_RESET_CODE}}
 @USER_JWT = {{$dotenv USER_JWT}}
+@STUDENT_ID = {{$dotenv STUDENT_ID}}
+@STUDENT_NAME = {{$dotenv STUDENT_NAME}}
+@STUDENT_NAME_UPDATE = {{$dotenv STUDENT_NAME_UPDATE}}
+@STUDENT_MOBILE = {{$dotenv STUDENT_MOBILE}}
+@STUDENT_CARDID = {{$dotenv STUDENT_CARDID}}
+@SUBJECT_NAME = {{$dotenv SUBJECT_NAME}}
+@SUBJECT_NAME_UPDATE = {{$dotenv SUBJECT_NAME_UPDATE}}
+@SUBJECT_ID = {{$dotenv SUBJECT_ID}}
+@TEACHER_NAME = {{$dotenv TEACHER_NAME}}
+@TEACHER_NAME_UPDATE = {{$dotenv TEACHER_NAME_UPDATE}}
+@TEACHER_ID = {{$dotenv TEACHER_ID}}
 
 
 ## 1.Admin
@@ -48,7 +59,6 @@ Content-Type: application/json
 
 
 ### 1.3.1 Reset Password
-# เอา code จาก response ของ Forgot Password มาใส่ที่ resetPasswordToken (ดู log server ได้เช่นกัน)
 POST http://localhost:1337/admin/reset-password
 Content-Type: application/json
 
@@ -95,7 +105,6 @@ Content-Type: application/json
 
 
 ### 2.3.1 Reset Password
-# เอา code จาก response ของ Forgot Password มาใส่ที่ code (ดู log server ได้เช่นกัน)
 POST http://localhost:1337/api/auth/reset-password
 Content-Type: application/json
 
@@ -111,42 +120,101 @@ GET http://localhost:1337/api/users/me
 Authorization: Bearer {{USER_JWT}}
 Content-Type: application/json
 
-### 3.content
-###3.1.1 student
-GET http://localhost:1337/api/students
-Authorization: Bearer {{USER_JWT}}
 
-####3.1.2 student by id
-GET http://localhost:1337/api/students/{{id}}
-Authorization: Bearer {{USER_JWT}}
-
-###3.1.3 create student
+## 3.Content
+### 3.1 Student
+#### 3.1.1 Create
 POST http://localhost:1337/api/students
 Authorization: Bearer {{USER_JWT}}
 Content-Type: application/json
 
 {
-    "name": "John Doe",
-    "email": "john.doe@example.com"
+    "data": {
+        "name": "{{STUDENT_NAME}}",
+        "mobile": "{{STUDENT_MOBILE}}",
+        "cardId": "{{STUDENT_CARDID}}"
+    }
 }
 
-###3.1.4 update student
-PUT http://localhost:1337/api/students/{{id}}
+#### 3.1.2 List All
+GET http://localhost:1337/api/students
+Authorization: Bearer {{USER_JWT}}
+
+#### 3.1.3 List with ID
+GET http://localhost:1337/api/students/{{STUDENT_ID}}
+Authorization: Bearer {{USER_JWT}}
+
+#### 3.1.4 Update
+PUT http://localhost:1337/api/students/{{STUDENT_ID}}
 Authorization: Bearer {{USER_JWT}}
 Content-Type: application/json
 
 {
-    "name": "John Doe",
-    "email": "john.doe@example.com"
+    "data": {
+        "name": "{{STUDENT_NAME_UPDATE}}",
+        "mobile": "{{STUDENT_MOBILE}}",
+        "cardId": "{{STUDENT_CARDID}}"
+    }
 }
 
-###3.1.5 delete student
-DELETE http://localhost:1337/api/students/{{id}}
+### 3.2 Subject
+#### 3.2.1 Create
+POST http://localhost:1337/api/subjects
+Authorization: Bearer {{USER_JWT}}
+Content-Type: application/json
+
+{
+    "data": {
+        "name": "{{SUBJECT_NAME}}"
+    }
+}
+
+#### 3.2.2 List All
+GET http://localhost:1337/api/subjects
 Authorization: Bearer {{USER_JWT}}
 
-##3.2 teacher
+#### 3.2.3 List with ID
+GET http://localhost:1337/api/subjects/{{SUBJECT_ID}}
+Authorization: Bearer {{USER_JWT}}
+
+#### 3.2.4 Update
+PUT http://localhost:1337/api/subjects/{{SUBJECT_ID}}
+Authorization: Bearer {{USER_JWT}}
+Content-Type: application/json
+
+{
+    "data": {
+        "name": "{{SUBJECT_NAME_UPDATE}}"
+    }
+}
+
+### 3.3 Teacher
+#### 3.3.1 Create
+POST http://localhost:1337/api/teachers
+Authorization: Bearer {{USER_JWT}}
+Content-Type: application/json
+
+{
+    "data": {
+        "name": "{{TEACHER_NAME}}"
+    }
+}
+
+#### 3.3.2 List All
 GET http://localhost:1337/api/teachers
 Authorization: Bearer {{USER_JWT}}
 
-###3.2.1 teacher by id
-GET http://localhost:1337/api/teachers/{{id}}
+#### 3.3.3 List with ID
+GET http://localhost:1337/api/teachers/{{TEACHER_ID}}
+Authorization: Bearer {{USER_JWT}}
+
+#### 3.3.4 Update
+PUT http://localhost:1337/api/teachers/{{TEACHER_ID}}
+Authorization: Bearer {{USER_JWT}}
+Content-Type: application/json
+
+{
+    "data": {
+        "name": "{{TEACHER_NAME_UPDATE}}"
+    }
+}
